@@ -1,6 +1,8 @@
 #include "NodeMap.hpp"
 #include <cstdlib>
+
 int _GOALPOS = 100;
+
 Node::Node(NODE_STATUS _status) {
     status = _status;
     if (_status == GOAL)

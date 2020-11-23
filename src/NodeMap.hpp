@@ -14,7 +14,7 @@ enum DIR { NORTH,
 extern int _GOALPOS;
 
 struct Node {
-    int Q[4] = {0, 0, 0, 0};
+    float Q[4] = {0, 0, 0, 0};
     int N[4] = {0, 0, 0, 0};
     bool BLOCKED[4] = {false, false, false, false};
     NODE_STATUS status;

@@ -15,7 +15,7 @@ const double DRIFT_NORTH = .7;
 const double DRIFT_LEFT = .15;
 const double DRIFT_RIGHT = .15;
 
-const double EPISON = .5;
+const double EPISON = .05;
 const double GAMMA = .9;
 
 

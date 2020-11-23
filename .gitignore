@@ -25,3 +25,4 @@ Manifest.toml
 
 # do not allow generated .o files
 *.o
+Run

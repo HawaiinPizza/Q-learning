@@ -1,4 +1,5 @@
 #include "NodeMap.hpp"
+#include<cstdlib>
 int _GOALPOS=100;
 Node::Node(NODE_STATUS _status) {
 	status=_status;
@@ -63,6 +64,11 @@ void setmapup(){
 	}
 
 }
+
+
+pair<int,int> randompos(){
+}
+
 
 vector<vector<Node>> MAP{
 	{OPEN,	OPEN,	OPEN,	OPEN,	OPEN}

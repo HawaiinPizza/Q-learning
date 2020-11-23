@@ -1,6 +1,6 @@
-#include<iostream>
 #include "NodeMap.hpp"
-#include<cstdlib>
+#include <cstdlib>
+#include <iostream>
 using namespace std;
 const string IO_EAST = ">>>>";
 const string IO_WEST = "<<<<";
@@ -20,13 +20,13 @@ const double GAMMA = .9;
 
 
 
-pair<int,int> randomPos(int seed=1){
-	//Fun fact: the seed is automatcailly 1.
-	srand(seed);
+pair<int, int> randomPos(int seed = 1) {
+    //Fun fact: the seed is automatcailly 1.
+    srand(seed);
 
-	int x=(rand())/((RAND_MAX)/MAP.size());
-	int y=rand()/((RAND_MAX)/MAP[x].size());
-	/* IMPORTANT
+    int x = (rand()) / ((RAND_MAX) / MAP.size());
+    int y = rand() / ((RAND_MAX) / MAP[x].size());
+    /* IMPORTANT
 	 * This will bascially check all columns of the current row
 	 * for a new posistion
 	 * If the walls are surronding the perimeter of the map
@@ -35,22 +35,21 @@ pair<int,int> randomPos(int seed=1){
 	 * isb ecause fuck jtryng to do it the professional way
 	 * TODO FIXME TODO XXX 
 	 */
-	{ // I put it in it's own scope to indicate this is a hack.
-		/* while(MAP[x][y].status==CLOSE || MAP[x][y].status == GOAL){ */
-		while(MAP[x][y].status==CLOSE || MAP[x][y].status == GOAL){
-			y=y+1;
-		}
-	}
-	return pair<int,int> {x,y};
+    { // I put it in it's own scope to indicate this is a hack.
+        /* while(MAP[x][y].status==CLOSE || MAP[x][y].status == GOAL){ */
+        while (MAP[x][y].status == CLOSE || MAP[x][y].status == GOAL) {
+            y = y + 1;
+        }
+    }
+    return pair<int, int>{x, y};
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
 
-	setmapup();
-	pair<int,int> wow = randomPos();
-	cout << wow.first << '\t' << wow.second << endl;
+    setmapup();
+    pair<int, int> wow = randomPos();
+    cout << wow.first << '\t' << wow.second << endl;
 
 
-	return 0;
-	}
+    return 0;
+}

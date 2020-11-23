@@ -5,6 +5,6 @@ const Map = [
 ,[OPEN, CLOSE, GOAL, OPEN, OPEN]
 ,[OPEN, OPEN, OPEN, OPEN, OPEN]
 ,[OPEN, CLOSE, OPEN, OPEN, OPEN]
-    ,[OPEN, OPEN, OPEN, OPEN, OPEN]]
+,[OPEN, OPEN, OPEN, OPEN, OPEN]]
 
 println(Map[3][3])

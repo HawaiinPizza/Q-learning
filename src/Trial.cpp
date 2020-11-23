@@ -46,8 +46,10 @@ pair<int, int> randomPos(int seed = 1) {
 
 int main(int argc, char *argv[]) {
 
+    int seed = 517;
+
     setmapup();
-    pair<int, int> wow = randomPos();
+    pair<int, int> wow = randomPos(seed);
     cout << wow.first << '\t' << wow.second << endl;
 
 

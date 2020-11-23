@@ -23,6 +23,7 @@ docs/site/
 # environment.
 Manifest.toml
 
-# do not allow generated .o files
+# do not allow generated files
 *.o
 Run
+.vscode

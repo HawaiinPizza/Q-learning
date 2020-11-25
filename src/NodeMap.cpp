@@ -218,8 +218,7 @@ int GetR(std::pair<int, int> curState, DIR action) {
         break;
 
     default:
-        std::cout << "\nINVALD VALUE FOR ACTION\n";
-        return 0;
+        throw invalid_argument("\nINVALD VALUE FOR ACTION\n");
         break;
     }
 }

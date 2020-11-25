@@ -25,7 +25,7 @@ Node::Node(NODE_STATUS _status) {
 }
 
 
-void printMap() {
+void PrintMap() {
     int side;
 
     cout << "Q grid\n";
@@ -108,7 +108,7 @@ void printMap() {
     }
 }
 
-void setmapup() {
+void SetMapUp() {
     bool north, south, east, west;
     int tmpi = 0;
     int tmpj = 0;
@@ -164,7 +164,20 @@ void setmapup() {
     }
 }
 
-pair<int, int> randomPos(int seed) {
+pair<int, int> RandomPos(int seed) {
+
+    vector<pair<int, int>> openPos;
+
+    openPos = GetOpenPositions();
+
+    srand(seed);
+
+    int randValue = rand() / ((RAND_MAX) / openPos.size());
+
+    return openPos[randValue];
+}
+
+vector<pair<int, int>> GetOpenPositions() {
 
     vector<pair<int, int>> openPos;
 
@@ -176,11 +189,7 @@ pair<int, int> randomPos(int seed) {
         }
     }
 
-    srand(seed);
-
-    int randValue = rand() / ((RAND_MAX) / openPos.size());
-
-    return openPos[randValue];
+    return openPos;
 }
 
 vector<vector<Node>> MAP{

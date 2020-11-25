@@ -7,12 +7,12 @@ int main(int argc, char *argv[]) {
 
     int seed = 517;
 
-    setmapup();
-    printMap();
+    SetMapUp();
+    PrintMap();
     /* pair<int, int> wow = randomPos(seed); */
     /* cout << wow.first << '\t' << wow.second << endl; */
 
-    std::pair<int, int> thang = randomPos(seed);
+    std::pair<int, int> thang = RandomPos(seed);
 
     std::cout << "Random Position: X = " << thang.first << " Y = " << thang.second;
     std::cout << std::endl;

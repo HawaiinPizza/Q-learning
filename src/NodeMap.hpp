@@ -27,8 +27,9 @@ struct Node {
 
 typedef vector<vector<Node>> vmap;
 
-void setmapup();
-void printMap();
-pair<int, int> randomPos(int seed = 1);
+void SetMapUp();
+void PrintMap();
+pair<int, int> RandomPos(int seed = 1);
+vector<pair<int, int>> GetOpenPositions();
 
 extern vmap MAP;

@@ -23,12 +23,12 @@ struct Node {
     NODE_STATUS status;
     int value = 0;
     Node(NODE_STATUS _status);
-
 };
 
 typedef vector<vector<Node>> vmap;
 
 void setmapup();
 void printMap();
+pair<int, int> randomPos(int seed = 1);
 
 extern vmap MAP;

@@ -14,7 +14,9 @@ enum DIR { NORTH,
 extern int _GOALPOS;
 
 struct Node {
+    //{NORTH,SOUTH,EAST,WEST}
     float Q[4] = {0, 0, 0, 0};
+    //{NORTH,SOUTH,EAST,WEST}
     int N[4] = {0, 0, 0, 0};
     // If you want to see hwat the resluts are, use these
     /* float Q[4] = {1, 2, 3, 4}; */
@@ -29,7 +31,11 @@ typedef vector<vector<Node>> vmap;
 
 void SetMapUp();
 void PrintMap();
+void IncrementN(std::pair<int, int>, DIR);
+int GetN(std::pair<int, int>, DIR);
+int GetR(std::pair<int, int>, DIR);
 pair<int, int> RandomPos(int seed = 1);
 vector<pair<int, int>> GetOpenPositions();
+
 
 extern vmap MAP;

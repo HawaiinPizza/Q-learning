@@ -192,6 +192,36 @@ vector<pair<int, int>> GetOpenPositions() {
     return openPos;
 }
 
+int GetN(std::pair<int, int> curPos, DIR action) {
+    return MAP[curPos.first][curPos.second].N[action];
+}
+
+void IncrementN(std::pair<int, int> curPos, DIR action) {
+    MAP[curPos.first][curPos.second].N[action]++;
+}
+
+int GetR(std::pair<int, int> curPos, DIR action) {
+    switch (action) {
+
+    case NORTH:
+        return -3;
+        break;
+
+    case SOUTH:
+        return -1;
+        break;
+
+    case EAST:
+    case WEST:
+        return -2;
+        break;
+
+    default:
+        std::cout << "\nINVALD VALUE FOR ACTION\n";
+        break;
+    }
+}
+
 vector<vector<Node>> MAP{
     {OPEN, OPEN, OPEN, OPEN, OPEN},
     {OPEN, CLOSE, CLOSE, OPEN, OPEN},

@@ -1,5 +1,7 @@
 #include "NodeMap.hpp"
+#include <array>
 #include <cstdlib>
+
 const string IO_EAST = ">>>>";
 const string IO_WEST = "<<<<";
 const string IO_NORTH = "^^^^";
@@ -23,7 +25,6 @@ Node::Node(NODE_STATUS _status) {
     if (_status == GOAL)
         value = _GOALPOS;
 }
-
 
 void PrintMap() {
     int side;
@@ -192,17 +193,17 @@ vector<pair<int, int>> GetOpenPositions() {
     return openPos;
 }
 
-int GetN(std::pair<int, int> curPos, DIR action) {
-    return MAP[curPos.first][curPos.second].N[action];
+int GetN(std::pair<int, int> curState, DIR action) {
+    return MAP[curState.first][curState.second].N[action];
 }
 
-void IncrementN(std::pair<int, int> curPos, DIR action) {
-    MAP[curPos.first][curPos.second].N[action]++;
+void IncrementN(std::pair<int, int> curState, DIR action) {
+    MAP[curState.first][curState.second].N[action]++;
 }
 
-int GetR(std::pair<int, int> curPos, DIR action) {
+int GetR(std::pair<int, int> curState, DIR action) {
+
     switch (action) {
-
     case NORTH:
         return -3;
         break;
@@ -218,8 +219,30 @@ int GetR(std::pair<int, int> curPos, DIR action) {
 
     default:
         std::cout << "\nINVALD VALUE FOR ACTION\n";
+        return 0;
         break;
     }
+}
+
+float GetQ(std::pair<int, int> curState, DIR action) {
+    return MAP[curState.first][curState.second].Q[action];
+}
+
+float GetMaxQ(std::pair<int, int> nextPos) {
+
+    float max = MAP[nextPos.first][nextPos.second].Q[0];
+
+    for (int x = 0; x < 4; x++) {
+        if (MAP[nextPos.first][nextPos.second].Q[x] > max) {
+            max = MAP[nextPos.first][nextPos.second].Q[x];
+        }
+    }
+
+    return max;
+}
+
+void SetQ(std::pair<int, int> curState, DIR action, float newQValue) {
+    MAP[curState.first][curState.second].Q[action] = newQValue;
 }
 
 vector<vector<Node>> MAP{

@@ -32,9 +32,16 @@ typedef vector<vector<Node>> vmap;
 void SetMapUp();
 void PrintMap();
 void IncrementN(std::pair<int, int>, DIR);
+void SetQ(std::pair<int, int>, DIR, float);
+
 int GetN(std::pair<int, int>, DIR);
 int GetR(std::pair<int, int>, DIR);
+
+float GetQ(std::pair<int, int>, DIR);
+float GetMaxQ(std::pair<int, int>);
+
 pair<int, int> RandomPos(int seed = 1);
+
 vector<pair<int, int>> GetOpenPositions();
 
 

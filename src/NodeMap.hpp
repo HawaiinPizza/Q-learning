@@ -31,6 +31,9 @@ typedef vector<vector<Node>> vmap;
 
 void SetMapUp();
 void PrintMap();
+void PrintBestPolicy();
+void PrintNGrid(int);
+void PrintQGrid(int);
 void IncrementN(std::pair<int, int>, DIR);
 void SetQ(std::pair<int, int>, DIR, float);
 

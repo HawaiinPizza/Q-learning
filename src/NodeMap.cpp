@@ -27,22 +27,47 @@ Node::Node(NODE_STATUS _status) {
 }
 
 void PrintMap() {
+
     int side;
 
+    PrintQGrid(side);
+    PrintNGrid(side);
+    PrintBestPolicy();
+}
+
+void PrintQGrid(int side) {
+
     cout << "Q grid\n";
+
     for (int i = 0; i < MAP.size(); ++i) {
         for (int k = 0; k < 3; k++) {
             side = k;
             for (int j = 0; j < MAP[i].size(); ++j) {
                 switch (side) {
                 case 0: //NORTH
-                    cout << ' ' << MAP[i][j].Q[NORTH] << '\t';
+                    if (MAP[i][j].status == CLOSE ||
+                        MAP[i][j].status == GOAL) {
+                        cout << ' ' << ' ' << '\t';
+                    } else {
+                        cout << ' ' << MAP[i][j].Q[NORTH] << '\t';
+                    }
                     break;
                 case 1: // HORTZ
-                    cout << MAP[i][j].Q[EAST] << ' ' << MAP[i][j].Q[WEST] << '\t';
+                    if (MAP[i][j].status == CLOSE) {
+                        cout << "####" << '\t';
+                    } else if (MAP[i][j].status == GOAL) {
+                        cout << "+100" << '\t';
+                    } else {
+                        cout << MAP[i][j].Q[EAST] << ' ' << MAP[i][j].Q[WEST] << '\t';
+                    }
                     break;
                 case 2: // SOUTH
-                    cout << ' ' << MAP[i][j].Q[SOUTH] << '\t';
+                    if (MAP[i][j].status == CLOSE ||
+                        MAP[i][j].status == GOAL) {
+                        cout << ' ' << ' ' << '\t';
+                    } else {
+                        cout << ' ' << MAP[i][j].Q[SOUTH] << '\t';
+                    }
                     break;
                 }
             }
@@ -50,21 +75,41 @@ void PrintMap() {
         }
         cout << endl;
     }
+}
+
+void PrintNGrid(int side) {
 
     cout << "N grid\n";
+
     for (int i = 0; i < MAP.size(); ++i) {
         for (int k = 0; k < 3; k++) {
             side = k;
             for (int j = 0; j < MAP[i].size(); ++j) {
                 switch (side) {
                 case 0: //NORTH
-                    cout << ' ' << MAP[i][j].N[NORTH] << '\t';
+                    if (MAP[i][j].status == CLOSE ||
+                        MAP[i][j].status == GOAL) {
+                        cout << ' ' << ' ' << '\t';
+                    } else {
+                        cout << ' ' << MAP[i][j].N[NORTH] << '\t';
+                    }
                     break;
                 case 1: // HORTZ
-                    cout << MAP[i][j].N[EAST] << ' ' << MAP[i][j].N[WEST] << '\t';
+                    if (MAP[i][j].status == CLOSE) {
+                        cout << "####" << '\t';
+                    } else if (MAP[i][j].status == GOAL) {
+                        cout << "+100" << '\t';
+                    } else {
+                        cout << MAP[i][j].N[EAST] << ' ' << MAP[i][j].N[WEST] << '\t';
+                    }
                     break;
                 case 2: // SOUTH
-                    cout << ' ' << MAP[i][j].N[SOUTH] << '\t';
+                    if (MAP[i][j].status == CLOSE ||
+                        MAP[i][j].status == GOAL) {
+                        cout << ' ' << ' ' << '\t';
+                    } else {
+                        cout << ' ' << MAP[i][j].N[SOUTH] << '\t';
+                    }
                     break;
                 }
             }
@@ -72,37 +117,52 @@ void PrintMap() {
         }
         cout << endl;
     }
+}
+
+void PrintBestPolicy() {
 
     cout << "Best policy\n";
+
     for (int i = 0; i < MAP.size(); ++i) {
         for (int j = 0; j < MAP[i].size(); ++j) {
             DIR bestdir = NORTH;
+
             float bestQ = MAP[i][j].Q[NORTH];
+
             if (MAP[i][j].Q[EAST] > bestQ) {
                 bestQ = MAP[i][j].Q[EAST];
                 bestdir = EAST;
             }
+
             if (MAP[i][j].Q[WEST] > bestQ) {
                 bestQ = MAP[i][j].Q[WEST];
                 bestdir = WEST;
             }
+
             if (MAP[i][j].Q[SOUTH] > bestQ) {
                 bestQ = MAP[i][j].Q[SOUTH];
                 bestdir = SOUTH;
             }
-            switch (bestdir) {
-            case 0:
-                cout << IO_NORTH << '\t';
-                break;
-            case 1:
-                cout << IO_SOUTH << '\t';
-                break;
-            case 3:
-                cout << IO_EAST << '\t';
-                break;
-            case 2:
-                cout << IO_WEST << '\t';
-                break;
+
+            if (MAP[i][j].status == CLOSE) {
+                cout << "####" << '\t';
+            } else if (MAP[i][j].status == GOAL) {
+                cout << "+100" << '\t';
+            } else {
+                switch (bestdir) {
+                case 0:
+                    cout << IO_NORTH << '\t';
+                    break;
+                case 1:
+                    cout << IO_SOUTH << '\t';
+                    break;
+                case 3:
+                    cout << IO_EAST << '\t';
+                    break;
+                case 2:
+                    cout << IO_WEST << '\t';
+                    break;
+                }
             }
         }
         cout << endl;
@@ -205,15 +265,30 @@ int GetR(std::pair<int, int> curState, DIR action) {
 
     switch (action) {
     case NORTH:
+        if (MAP[curState.first - 1][curState.second].status == GOAL) {
+            return 100 - 3;
+        }
         return -3;
         break;
 
     case SOUTH:
+        if (MAP[curState.first + 1][curState.second].status == GOAL) {
+            return 100 - 1;
+        }
         return -1;
         break;
 
     case EAST:
+        if (MAP[curState.first][curState.second + 1].status == GOAL) {
+            return 100 - 2;
+        }
+        return -2;
+        break;
+
     case WEST:
+        if (MAP[curState.first][curState.second - 1].status == GOAL) {
+            return 100 - 2;
+        }
         return -2;
         break;
 

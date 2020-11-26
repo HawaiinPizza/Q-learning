@@ -347,22 +347,41 @@ float GetMaxQ(std::pair<int, int> nextPos) {
 
 DIR GetBstDir(std::pair<int, int> curPos) {
 
+    double randValue = rand() / ((RAND_MAX) / 1);
     DIR bestDir;
-    float max = MAP[curPos.first][curPos.second].Q[0];
 
-    for (int x = 0; x < 4; x++) {
-        if (MAP[curPos.first][curPos.second].Q[x] > max) {
-            max = MAP[curPos.first][curPos.second].Q[x];
-            if (x == 0)
-                bestDir = NORTH;
-            else if (x == 1)
-                bestDir = EAST;
-            else if (x == 2)
-                bestDir = SOUTH;
-            else
-                bestDir = WEST;
+    if (randValue > EPISON) {
+
+        float max = MAP[curPos.first][curPos.second].Q[0];
+
+        for (int x = 0; x < 4; x++) {
+            if (MAP[curPos.first][curPos.second].Q[x] > max) {
+                max = MAP[curPos.first][curPos.second].Q[x];
+                if (x == 0)
+                    bestDir = NORTH;
+                else if (x == 1)
+                    bestDir = EAST;
+                else if (x == 2)
+                    bestDir = SOUTH;
+                else
+                    bestDir = WEST;
+            }
+        }
+    } else {
+
+        int directionChoice = rand() / ((RAND_MAX) / 4);
+
+        if (directionChoice == 0) {
+            bestDir = NORTH;
+        } else if (directionChoice == 1) {
+            bestDir = EAST;
+        } else if (directionChoice == 2) {
+            bestDir = SOUTH;
+        } else if (directionChoice == 2) {
+            bestDir = WEST;
         }
     }
+
 
     return bestDir;
 }

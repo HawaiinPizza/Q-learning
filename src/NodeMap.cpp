@@ -26,6 +26,18 @@ Node::Node(NODE_STATUS _status) {
         value = _GOALPOS;
 }
 
+void QLearning(pair<int, int> curPos) {
+
+    int x = 0;
+
+    while (x < 100 &&
+           MAP[curPos.first][curPos.second].status != GOAL &&
+           MAP[curPos.first][curPos.second].status != TRAP) {
+
+        x++;
+    }
+}
+
 // I/O
 void PrintMap() {
 
@@ -345,7 +357,7 @@ float GetMaxQ(std::pair<int, int> nextPos) {
     return max;
 }
 
-DIR GetBstDir(std::pair<int, int> curPos) {
+DIR EGreedy(std::pair<int, int> curPos) {
 
     double randValue = rand() / ((RAND_MAX) / 1);
     DIR bestDir;
@@ -367,6 +379,7 @@ DIR GetBstDir(std::pair<int, int> curPos) {
                     bestDir = WEST;
             }
         }
+
     } else {
 
         int directionChoice = rand() / ((RAND_MAX) / 4);
@@ -381,7 +394,6 @@ DIR GetBstDir(std::pair<int, int> curPos) {
             bestDir = WEST;
         }
     }
-
 
     return bestDir;
 }

@@ -29,6 +29,7 @@ struct Node {
 
 typedef vector<vector<Node>> vmap;
 
+void QLearning(pair<int, int>);
 void SetMapUp();
 void PrintMap();
 void PrintBestPolicy();
@@ -43,7 +44,7 @@ int GetR(std::pair<int, int>, DIR);
 float GetQ(std::pair<int, int>, DIR);
 float GetMaxQ(std::pair<int, int>);
 
-DIR GetBstDir(std::pair<int, int>);
+DIR EGreedy(std::pair<int, int>);
 
 pair<int, int> RandomPos(int seed = 1);
 pair<int, int> GetNxtPos(std::pair<int, int>, DIR);

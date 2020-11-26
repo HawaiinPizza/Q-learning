@@ -266,30 +266,30 @@ int GetR(std::pair<int, int> curState, DIR action) {
     switch (action) {
     case NORTH:
         if (MAP[curState.first - 1][curState.second].status == GOAL) {
-            return 100 - 3;
+            return _GOALPOS - MOVE_NORTH;
         }
-        return -3;
+        return -MOVE_NORTH;
         break;
 
     case SOUTH:
         if (MAP[curState.first + 1][curState.second].status == GOAL) {
-            return 100 - 1;
+            return _GOALPOS - MOVE_SOUTH;
         }
-        return -1;
+        return -MOVE_SOUTH;
         break;
 
     case EAST:
         if (MAP[curState.first][curState.second + 1].status == GOAL) {
-            return 100 - 2;
+            return _GOALPOS - MOVE_HORZ;
         }
-        return -2;
+        return -MOVE_HORZ;
         break;
 
     case WEST:
         if (MAP[curState.first][curState.second - 1].status == GOAL) {
-            return 100 - 2;
+            return _GOALPOS - MOVE_HORZ;
         }
-        return -2;
+        return -MOVE_HORZ;
         break;
 
     default:

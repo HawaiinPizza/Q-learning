@@ -7,16 +7,16 @@ enum NODE_STATUS { OPEN,
                    TRAP };
 
 enum DIR { NORTH,
-           SOUTH,
            EAST,
+           SOUTH,
            WEST };
 
 extern int _GOALPOS;
 
 struct Node {
-    //{NORTH,SOUTH,EAST,WEST}
+    //{NORTH,EAST,SOUTH,WEST}
     float Q[4] = {0, 0, 0, 0};
-    //{NORTH,SOUTH,EAST,WEST}
+    //{NORTH,EAST,SOUTH,WEST}
     int N[4] = {0, 0, 0, 0};
     // If you want to see hwat the resluts are, use these
     /* float Q[4] = {1, 2, 3, 4}; */
@@ -43,9 +43,11 @@ int GetR(std::pair<int, int>, DIR);
 float GetQ(std::pair<int, int>, DIR);
 float GetMaxQ(std::pair<int, int>);
 
+DIR GetBstDir(std::pair<int, int>);
+
 pair<int, int> RandomPos(int seed = 1);
+pair<int, int> GetNxtPos(std::pair<int, int>, DIR);
 
 vector<pair<int, int>> GetOpenPositions();
-
 
 extern vmap MAP;

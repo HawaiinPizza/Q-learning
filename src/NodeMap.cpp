@@ -26,6 +26,7 @@ Node::Node(NODE_STATUS _status) {
         value = _GOALPOS;
 }
 
+// I/O
 void PrintMap() {
 
     int side;
@@ -225,6 +226,7 @@ void SetMapUp() {
     }
 }
 
+// Position Functions
 pair<int, int> RandomPos(int seed) {
 
     vector<pair<int, int>> openPos;
@@ -236,6 +238,33 @@ pair<int, int> RandomPos(int seed) {
     int randValue = rand() / ((RAND_MAX) / openPos.size());
 
     return openPos[randValue];
+}
+
+pair<int, int> GetNxtPos(std::pair<int, int> curState, DIR action) {
+
+    switch (action) {
+    case NORTH:
+        if (!MAP[curState.first][curState.second].BLOCKED[NORTH])
+            return pair<int, int>{curState.first - 1, curState.second};
+        break;
+
+    case EAST:
+        if (!MAP[curState.first][curState.second].BLOCKED[EAST])
+            return pair<int, int>{curState.first, curState.second + 1};
+        break;
+
+    case SOUTH:
+        if (!MAP[curState.first][curState.second].BLOCKED[SOUTH])
+            return pair<int, int>{curState.first + 1, curState.second};
+        break;
+
+    case WEST:
+        if (!MAP[curState.first][curState.second].BLOCKED[WEST])
+            return pair<int, int>{curState.first, curState.second - 1};
+        break;
+    }
+
+    return curState;
 }
 
 vector<pair<int, int>> GetOpenPositions() {
@@ -253,40 +282,41 @@ vector<pair<int, int>> GetOpenPositions() {
     return openPos;
 }
 
+// Get Value for equations functions
 int GetN(std::pair<int, int> curState, DIR action) {
     return MAP[curState.first][curState.second].N[action];
-}
-
-void IncrementN(std::pair<int, int> curState, DIR action) {
-    MAP[curState.first][curState.second].N[action]++;
 }
 
 int GetR(std::pair<int, int> curState, DIR action) {
 
     switch (action) {
     case NORTH:
-        if (MAP[curState.first - 1][curState.second].status == GOAL) {
+        if (!MAP[curState.first][curState.second].BLOCKED[NORTH] &&
+            MAP[curState.first - 1][curState.second].status == GOAL) {
             return _GOALPOS - MOVE_NORTH;
         }
         return -MOVE_NORTH;
         break;
 
     case SOUTH:
-        if (MAP[curState.first + 1][curState.second].status == GOAL) {
+        if (!MAP[curState.first][curState.second].BLOCKED[SOUTH] &&
+            MAP[curState.first + 1][curState.second].status == GOAL) {
             return _GOALPOS - MOVE_SOUTH;
         }
         return -MOVE_SOUTH;
         break;
 
     case EAST:
-        if (MAP[curState.first][curState.second + 1].status == GOAL) {
+        if (!MAP[curState.first][curState.second].BLOCKED[EAST] &&
+            MAP[curState.first][curState.second + 1].status == GOAL) {
             return _GOALPOS - MOVE_HORZ;
         }
         return -MOVE_HORZ;
         break;
 
     case WEST:
-        if (MAP[curState.first][curState.second - 1].status == GOAL) {
+        if (!MAP[curState.first][curState.second].BLOCKED[WEST] &&
+            MAP[curState.first][curState.second - 1].status == GOAL) {
             return _GOALPOS - MOVE_HORZ;
         }
         return -MOVE_HORZ;
@@ -315,10 +345,38 @@ float GetMaxQ(std::pair<int, int> nextPos) {
     return max;
 }
 
+DIR GetBstDir(std::pair<int, int> curPos) {
+
+    DIR bestDir;
+    float max = MAP[curPos.first][curPos.second].Q[0];
+
+    for (int x = 0; x < 4; x++) {
+        if (MAP[curPos.first][curPos.second].Q[x] > max) {
+            max = MAP[curPos.first][curPos.second].Q[x];
+            if (x == 0)
+                bestDir = NORTH;
+            else if (x == 1)
+                bestDir = EAST;
+            else if (x == 2)
+                bestDir = SOUTH;
+            else
+                bestDir = WEST;
+        }
+    }
+
+    return bestDir;
+}
+
+// Set Value for equations functions
 void SetQ(std::pair<int, int> curState, DIR action, float newQValue) {
     MAP[curState.first][curState.second].Q[action] = newQValue;
 }
 
+void IncrementN(std::pair<int, int> curState, DIR action) {
+    MAP[curState.first][curState.second].N[action]++;
+}
+
+// The Map
 vector<vector<Node>> MAP{
     {OPEN, OPEN, OPEN, OPEN, OPEN},
     {OPEN, CLOSE, CLOSE, OPEN, OPEN},

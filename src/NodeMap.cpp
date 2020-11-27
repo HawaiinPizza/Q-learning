@@ -42,13 +42,22 @@ void QLearning(pair<int, int> state) {
         // Equation 2
         pair<int, int> nextPos = GetNxtPos(state, dir);
 
-        float newQValue = 0.0f;
+        float newQValue;
 
-        newQValue = GetQ(state, dir) +
-                    (((1 / GetN(state, dir)) *
-                      (GetR(state, dir) +
-                       GAMMA * GetMaxQ(nextPos) -
-                       GetQ(state, dir))));
+        float qVal = GetQ(state, dir);
+        float maxQVal = GetMaxQ(nextPos);
+        int nVal = GetN(state, dir);
+        int rVal = GetR(state, dir);
+
+        // cout << "QVal: " << qVal << endl;
+        // cout << "MaxQ: " << maxQVal << endl;
+        // cout << "NVal: " << nVal << endl;
+        // cout << "RVal: " << rVal << endl;
+
+        newQValue = qVal + (((1 / nVal) * (rVal + (GAMMA * maxQVal) - qVal)));
+
+        // cout << "NewQ: " << newQValue << endl
+        //      << endl;
 
         SetQ(state, dir, newQValue);
 
@@ -91,7 +100,7 @@ void PrintQGrid(int side) {
                     } else if (MAP[i][j].status == GOAL) {
                         cout << "+100" << '\t';
                     } else {
-                        cout << MAP[i][j].Q[EAST] << ' ' << MAP[i][j].Q[WEST] << '\t';
+                        cout << MAP[i][j].Q[WEST] << ' ' << MAP[i][j].Q[EAST] << '\t';
                     }
                     break;
                 case 2: // SOUTH
@@ -133,7 +142,7 @@ void PrintNGrid(int side) {
                     } else if (MAP[i][j].status == GOAL) {
                         cout << "+100" << '\t';
                     } else {
-                        cout << MAP[i][j].N[EAST] << ' ' << MAP[i][j].N[WEST] << '\t';
+                        cout << MAP[i][j].N[WEST] << ' ' << MAP[i][j].N[EAST] << '\t';
                     }
                     break;
                 case 2: // SOUTH
@@ -183,16 +192,16 @@ void PrintBestPolicy() {
                 cout << "+100" << '\t';
             } else {
                 switch (bestdir) {
-                case 0:
+                case NORTH:
                     cout << IO_NORTH << '\t';
                     break;
-                case 1:
+                case SOUTH:
                     cout << IO_SOUTH << '\t';
                     break;
-                case 3:
+                case EAST:
                     cout << IO_EAST << '\t';
                     break;
-                case 2:
+                case WEST:
                     cout << IO_WEST << '\t';
                     break;
                 }
@@ -211,38 +220,38 @@ void SetMapUp() {
             { // Checking north pos
                 tmpi = i - 1;
                 if (tmpi < 0 || tmpi >= MAP.size())
-                    north = false;
-                else if (MAP[tmpi][j].status == CLOSE)
-                    north = false;
-                else
                     north = true;
+                else if (MAP[tmpi][j].status == CLOSE)
+                    north = true;
+                else
+                    north = false;
             }
             { // Checking south pos
                 tmpi = i + 1;
                 if (tmpi < 0 || tmpi >= MAP.size())
-                    south = false;
-                else if (MAP[tmpi][j].status == CLOSE)
-                    south = false;
-                else
                     south = true;
+                else if (MAP[tmpi][j].status == CLOSE)
+                    south = true;
+                else
+                    south = false;
             }
             { // Checking east pos
-                tmpj = j - 1;
-                if (tmpj < 0 || tmpj >= MAP[i].size())
-                    east = false;
-                else if (MAP[i][tmpj].status == CLOSE)
-                    east = false;
-                else
-                    east = true;
-            }
-            { // Checking west pos
                 tmpj = j + 1;
                 if (tmpj < 0 || tmpj >= MAP[i].size())
-                    west = false;
+                    east = true;
                 else if (MAP[i][tmpj].status == CLOSE)
-                    west = false;
+                    east = true;
                 else
+                    east = false;
+            }
+            { // Checking west pos
+                tmpj = j - 1;
+                if (tmpj < 0 || tmpj >= MAP[i].size())
                     west = true;
+                else if (MAP[i][tmpj].status == CLOSE)
+                    west = true;
+                else
+                    west = false;
             }
             /* MAP[i][j].BLOCKED = {NORTH, SOUTH, EAST, WEST}; */
             /* MAP[i][j].BLOCKED[NORTH]=true; */
@@ -259,13 +268,11 @@ void SetMapUp() {
 }
 
 // Position Functions
-pair<int, int> RandomPos(int seed) {
+pair<int, int> RandomPos() {
 
     vector<pair<int, int>> openPos;
 
     openPos = GetOpenPositions();
-
-    srand(seed);
 
     int randValue = rand() / ((RAND_MAX) / openPos.size());
 
@@ -301,30 +308,30 @@ pair<int, int> GetNxtPos(std::pair<int, int> curState, DIR action) {
 
 pair<int, int> Move(std::pair<int, int> curState, DIR action) {
 
-    double randValue = rand() / ((RAND_MAX) / 1);
+    float randValue = rand() / (RAND_MAX);
 
     // Drift Straight
-    if (randValue > DRIFT_HORIZONTAL) {
+    if (randValue >= DRIFT_HORIZONTAL) {
         return GetNxtPos(curState, action);
-    } else if (randValue >= DRIFT_LEFT) {
+    } else if (randValue > DRIFT_LEFT) {
         if (action == NORTH) {
-            return GetNxtPos(curState, EAST);
-        } else if (action == EAST) {
-            return GetNxtPos(curState, SOUTH);
-        } else if (action == SOUTH) {
             return GetNxtPos(curState, WEST);
-        } else {
+        } else if (action == EAST) {
             return GetNxtPos(curState, NORTH);
+        } else if (action == SOUTH) {
+            return GetNxtPos(curState, EAST);
+        } else {
+            return GetNxtPos(curState, SOUTH);
         }
     } else {
         if (action == NORTH) {
-            return GetNxtPos(curState, WEST);
-        } else if (action == EAST) {
-            return GetNxtPos(curState, NORTH);
-        } else if (action == SOUTH) {
             return GetNxtPos(curState, EAST);
-        } else {
+        } else if (action == EAST) {
             return GetNxtPos(curState, SOUTH);
+        } else if (action == SOUTH) {
+            return GetNxtPos(curState, WEST);
+        } else {
+            return GetNxtPos(curState, NORTH);
         }
     }
 }
@@ -334,7 +341,7 @@ vector<pair<int, int>> GetOpenPositions() {
     vector<pair<int, int>> openPos;
 
     for (int x = 0; x < MAP.size(); x++) {
-        for (int y = 0; y < MAP[1].size(); y++) {
+        for (int y = 0; y < MAP[x].size(); y++) {
             if (MAP[x][y].status == OPEN) {
                 openPos.push_back(pair<int, int>{x, y});
             }
@@ -409,7 +416,7 @@ float GetMaxQ(std::pair<int, int> nextState) {
 
 DIR EGreedy(std::pair<int, int> curState) {
 
-    double randValue = rand() / ((RAND_MAX) / 1);
+    float randValue = rand() / (RAND_MAX);
     DIR bestDir;
 
     if (randValue > EPISON) {
@@ -419,11 +426,11 @@ DIR EGreedy(std::pair<int, int> curState) {
         for (int x = 0; x < 4; x++) {
             if (MAP[curState.first][curState.second].Q[x] > max) {
                 max = MAP[curState.first][curState.second].Q[x];
-                if (x == 0)
+                if (x == NORTH)
                     bestDir = NORTH;
-                else if (x == 1)
+                else if (x == EAST)
                     bestDir = EAST;
-                else if (x == 2)
+                else if (x == SOUTH)
                     bestDir = SOUTH;
                 else
                     bestDir = WEST;
@@ -434,13 +441,13 @@ DIR EGreedy(std::pair<int, int> curState) {
 
         int directionChoice = rand() / ((RAND_MAX) / 4);
 
-        if (directionChoice == 0) {
+        if (directionChoice == NORTH) {
             bestDir = NORTH;
-        } else if (directionChoice == 1) {
+        } else if (directionChoice == EAST) {
             bestDir = EAST;
-        } else if (directionChoice == 2) {
+        } else if (directionChoice == SOUTH) {
             bestDir = SOUTH;
-        } else if (directionChoice == 2) {
+        } else if (directionChoice == WEST) {
             bestDir = WEST;
         }
     }

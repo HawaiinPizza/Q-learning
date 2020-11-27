@@ -308,7 +308,7 @@ pair<int, int> GetNxtPos(std::pair<int, int> curState, DIR action) {
 
 pair<int, int> Move(std::pair<int, int> curState, DIR action) {
 
-    float randValue = rand() / (RAND_MAX);
+    float randValue = rand() / (float)(RAND_MAX);
 
     // Drift Straight
     if (randValue >= DRIFT_HORIZONTAL) {
@@ -416,8 +416,8 @@ float GetMaxQ(std::pair<int, int> nextState) {
 
 DIR EGreedy(std::pair<int, int> curState) {
 
-    float randValue = rand() / (RAND_MAX);
-    DIR bestDir;
+    float randValue = rand() / (float)(RAND_MAX);
+    DIR bestDir = NORTH;
 
     if (randValue > EPISON) {
 

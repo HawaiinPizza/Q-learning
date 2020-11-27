@@ -99,6 +99,9 @@ void PrintQGrid(int side) {
 
     cout << "Q grid\n";
 
+    cout << setprecision(1);
+    cout << fixed;
+
     for (int i = 0; i < MAP.size(); ++i) {
         for (int k = 0; k < 3; k++) {
             side = k;
@@ -109,8 +112,6 @@ void PrintQGrid(int side) {
                         MAP[i][j].status == GOAL) {
                         cout << '\t' << ' ' << '\t';
                     } else {
-                        cout << setprecision(1);
-                        cout << fixed;
                         cout << setw(12);
                         cout << MAP[i][j].Q[NORTH];
                         cout << "    ";
@@ -126,8 +127,6 @@ void PrintQGrid(int side) {
                         cout << "+100";
                         cout << "    ";
                     } else {
-                        cout << setprecision(1);
-                        cout << fixed;
                         cout << setw(8);
                         cout << MAP[i][j].Q[WEST];
                         cout << setw(8);
@@ -139,8 +138,6 @@ void PrintQGrid(int side) {
                         MAP[i][j].status == GOAL) {
                         cout << '\t' << ' ' << '\t';
                     } else {
-                        cout << setprecision(1);
-                        cout << fixed;
                         cout << setw(12);
                         cout << MAP[i][j].Q[SOUTH];
                         cout << "    ";
@@ -168,7 +165,6 @@ void PrintNGrid(int side) {
                         MAP[i][j].status == GOAL) {
                         cout << '\t' << ' ' << '\t';
                     } else {
-                        cout << fixed;
                         cout << setw(12);
                         cout << MAP[i][j].N[NORTH];
                         cout << "    ";
@@ -184,7 +180,6 @@ void PrintNGrid(int side) {
                         cout << "+100";
                         cout << "    ";
                     } else {
-                        cout << fixed;
                         cout << setw(8);
                         cout << MAP[i][j].N[WEST];
                         cout << setw(8);
@@ -196,7 +191,6 @@ void PrintNGrid(int side) {
                         MAP[i][j].status == GOAL) {
                         cout << '\t' << ' ' << '\t';
                     } else {
-                        cout << fixed;
                         cout << setw(12);
                         cout << MAP[i][j].N[SOUTH];
                         cout << "    ";

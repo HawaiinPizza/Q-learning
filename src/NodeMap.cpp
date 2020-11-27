@@ -90,14 +90,14 @@ void PrintMap() {
 
     int side;
 
-    PrintQGrid(side);
     PrintNGrid(side);
+    PrintQGrid(side);
     PrintBestPolicy();
 }
 
 void PrintQGrid(int side) {
 
-    cout << "Q grid\n";
+    cout << "Q(s,a):\n";
 
     cout << setprecision(1);
     cout << fixed;
@@ -153,7 +153,7 @@ void PrintQGrid(int side) {
 
 void PrintNGrid(int side) {
 
-    cout << "N grid\n";
+    cout << "N(s,a):\n";
 
     for (int i = 0; i < MAP.size(); ++i) {
         for (int k = 0; k < 3; k++) {
@@ -206,7 +206,7 @@ void PrintNGrid(int side) {
 
 void PrintBestPolicy() {
 
-    cout << "Best policy\n";
+    cout << "Optimal Policy:\n";
 
     vector<pair<string, pair<int, int>>> diff;
     cout << '\t';

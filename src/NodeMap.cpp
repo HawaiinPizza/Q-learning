@@ -2,6 +2,20 @@
 #include <array>
 #include <cstdlib>
 #include <iomanip>
+const int ___E=0;
+const int ___N=1;
+const int ___S=2;
+const int ___W=3;
+const int ___WALL=-1;
+vector<vector<int>> CORR{
+	{___E,  ___E, ___E, ___S, ___S}
+	,{___N,  ___WALL, ___WALL, ___S, ___S}
+	,{___S,  ___WALL, 100, ___W, ___W}
+
+	,{___S,  ___WALL, ___WALL, ___N, ___E}
+	,{___S,  ___WALL, ___N, ___N, ___N}
+	,{___E,  ___E, ___E, ___N, ___N}
+};
 
 const string IO_EAST = ">>>>";
 const string IO_WEST = "<<<<";
@@ -169,6 +183,7 @@ void PrintBestPolicy() {
 
     cout << "Best policy\n";
 
+    vector<pair<string, pair<int,int>>> diff;
     for (int i = 0; i < MAP.size(); ++i) {
         for (int j = 0; j < MAP[i].size(); ++j) {
             DIR bestdir = NORTH;
@@ -195,23 +210,59 @@ void PrintBestPolicy() {
             } else if (MAP[i][j].status == GOAL) {
                 cout << "+100" << '\t';
             } else {
+		    /* pair<int,int> difference={i,j}; */
                 switch (bestdir) {
                 case NORTH:
+			if(___N  != CORR[i][j]){
+				pair<string, pair<int,int>> difference={IO_NORTH, {i,j}};
+				diff.push_back(difference);
+			}
                     cout << IO_NORTH << '\t';
                     break;
                 case SOUTH:
+			if(___S  != CORR[i][j]){
+				pair<string, pair<int,int>> difference={IO_SOUTH, {i,j}};
+				diff.push_back(difference);
+			}
                     cout << IO_SOUTH << '\t';
                     break;
                 case EAST:
+			if(___E  != CORR[i][j]){
+				pair<string, pair<int,int>> difference={IO_EAST, {i,j}};
+				diff.push_back(difference);
+			}
                     cout << IO_EAST << '\t';
                     break;
                 case WEST:
+			if(___W  != CORR[i][j]){
+				pair<string, pair<int,int>> difference={IO_WEST, {i,j}};
+				diff.push_back(difference);
+			}
                     cout << IO_WEST << '\t';
                     break;
                 }
             }
         }
         cout << endl;
+    }
+    for (int i = 0; i < diff.size(); ++i) {
+	    string correct;
+	    switch(CORR[diff[i].second.first][diff[i].second.second]){
+		    case ___E:
+			    correct=IO_EAST;
+			    break;
+		    case ___W:
+			    correct=IO_WEST;
+			    break;
+		    case ___N:
+			    correct=IO_NORTH;
+			    break;
+		    case ___S:
+			    correct=IO_SOUTH;
+			    break;
+	    }
+	    cout << "DIFF: positon " << diff[i].second.first << '\t' << diff[i].second.second <<'\t' << "values: " << diff[i].first <<   '\t' << correct <<  endl;
+    	
     }
 }
 
@@ -457,3 +508,4 @@ vector<vector<Node>> MAP{
     {OPEN, CLOSE, CLOSE, OPEN, OPEN},
     {OPEN, CLOSE, OPEN, OPEN, OPEN},
     {OPEN, OPEN, OPEN, OPEN, OPEN}};
+

@@ -13,7 +13,7 @@ vector<vector<int>> CORR{
     {___E, ___E, ___E, ___S, ___S},
     {___N, ___WALL, ___WALL, ___S, ___S},
     {___S, ___WALL, 100, ___W, ___W},
-    {___S, ___WALL, ___WALL, ___N, ___E},
+    {___S, ___WALL, ___WALL, ___N, ___W},
     {___S, ___WALL, ___E, ___N, ___N},
     {___E, ___E, ___E, ___N, ___N}};
 

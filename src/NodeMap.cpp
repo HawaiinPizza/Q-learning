@@ -1,6 +1,7 @@
 #include "NodeMap.hpp"
 #include <array>
 #include <cstdlib>
+#include <iomanip>
 
 const string IO_EAST = ">>>>";
 const string IO_WEST = "<<<<";
@@ -54,7 +55,7 @@ void QLearning(pair<int, int> state) {
         // cout << "NVal: " << nVal << endl;
         // cout << "RVal: " << rVal << endl;
 
-        newQValue = qVal + (((1 / nVal) * (rVal + (GAMMA * maxQVal) - qVal)));
+        newQValue = qVal + (1.0f / nVal) * (rVal + (GAMMA * maxQVal) - qVal);
 
         // cout << "NewQ: " << newQValue << endl
         //      << endl;
@@ -91,6 +92,7 @@ void PrintQGrid(int side) {
                         MAP[i][j].status == GOAL) {
                         cout << ' ' << ' ' << '\t';
                     } else {
+                        cout << setprecision(2);
                         cout << ' ' << MAP[i][j].Q[NORTH] << '\t';
                     }
                     break;
@@ -100,6 +102,7 @@ void PrintQGrid(int side) {
                     } else if (MAP[i][j].status == GOAL) {
                         cout << "+100" << '\t';
                     } else {
+                        cout << setprecision(2);
                         cout << MAP[i][j].Q[WEST] << ' ' << MAP[i][j].Q[EAST] << '\t';
                     }
                     break;
@@ -108,6 +111,7 @@ void PrintQGrid(int side) {
                         MAP[i][j].status == GOAL) {
                         cout << ' ' << ' ' << '\t';
                     } else {
+                        cout << setprecision(2);
                         cout << ' ' << MAP[i][j].Q[SOUTH] << '\t';
                     }
                     break;
@@ -417,7 +421,8 @@ float GetMaxQ(std::pair<int, int> nextState) {
 DIR EGreedy(std::pair<int, int> curState) {
 
     float randValue = rand() / (float)(RAND_MAX);
-    DIR bestDir = NORTH;
+
+    DIR bestDir = (DIR)((int)(rand() / ((RAND_MAX) / 4)));
 
     if (randValue > EPISON) {
 
@@ -425,31 +430,15 @@ DIR EGreedy(std::pair<int, int> curState) {
 
         for (int x = 0; x < 4; x++) {
             if (MAP[curState.first][curState.second].Q[x] > max) {
+
                 max = MAP[curState.first][curState.second].Q[x];
-                if (x == NORTH)
-                    bestDir = NORTH;
-                else if (x == EAST)
-                    bestDir = EAST;
-                else if (x == SOUTH)
-                    bestDir = SOUTH;
-                else
-                    bestDir = WEST;
+                bestDir = (DIR)x;
             }
         }
 
     } else {
 
-        int directionChoice = rand() / ((RAND_MAX) / 4);
-
-        if (directionChoice == NORTH) {
-            bestDir = NORTH;
-        } else if (directionChoice == EAST) {
-            bestDir = EAST;
-        } else if (directionChoice == SOUTH) {
-            bestDir = SOUTH;
-        } else if (directionChoice == WEST) {
-            bestDir = WEST;
-        }
+        bestDir = (DIR)(rand() / ((RAND_MAX) / 4));
     }
 
     return bestDir;

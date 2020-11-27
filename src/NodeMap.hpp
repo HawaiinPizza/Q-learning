@@ -46,7 +46,7 @@ float GetMaxQ(std::pair<int, int>);
 
 DIR EGreedy(std::pair<int, int>);
 
-pair<int, int> RandomPos();
+pair<int, int> RandomPos(vector<pair<int, int>>);
 pair<int, int> GetNxtPos(std::pair<int, int>, DIR);
 pair<int, int> Move(std::pair<int, int>, DIR);
 

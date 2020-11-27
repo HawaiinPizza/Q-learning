@@ -272,11 +272,7 @@ void SetMapUp() {
 }
 
 // Position Functions
-pair<int, int> RandomPos() {
-
-    vector<pair<int, int>> openPos;
-
-    openPos = GetOpenPositions();
+pair<int, int> RandomPos(vector<pair<int, int>> openPos) {
 
     int randValue = rand() / ((RAND_MAX) / openPos.size());
 

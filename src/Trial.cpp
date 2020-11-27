@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
 
     std::pair<int, int> randPos = RandomPos(seed);
 
-    for (int x = 0; x < 10000; x++) {
+    for (int x = 0; x < 10; x++) {
 
         QLearning(randPos);
     }

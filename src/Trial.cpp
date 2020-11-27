@@ -15,8 +15,6 @@ int main(int argc, char *argv[]) {
 
         std::pair<int, int> randPos = RandomPos(openPos);
 
-        //cout << "Random Position: X = " << randPos.first << " Y = " << randPos.second << endl;
-
         QLearning(randPos);
     }
 

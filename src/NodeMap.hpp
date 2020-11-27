@@ -48,6 +48,7 @@ DIR EGreedy(std::pair<int, int>);
 
 pair<int, int> RandomPos(int seed = 1);
 pair<int, int> GetNxtPos(std::pair<int, int>, DIR);
+pair<int, int> Move(std::pair<int, int>, DIR);
 
 vector<pair<int, int>> GetOpenPositions();
 

@@ -10,14 +10,15 @@ int main(int argc, char *argv[]) {
     /* pair<int, int> wow = randomPos(seed); */
     /* cout << wow.first << '\t' << wow.second << endl; */
 
-    std::pair<int, int> thang = RandomPos(seed);
+    SetMapUp();
+
+    std::pair<int, int> randPos = RandomPos(seed);
 
     for (int x = 0; x < 10000; x++) {
 
-        QLearning(thang);
+        QLearning(randPos);
     }
 
-    SetMapUp();
     PrintMap();
 
     return 0;

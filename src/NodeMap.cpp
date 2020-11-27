@@ -11,9 +11,8 @@ const int MOVE_HORZ = 2;
 const int MOVE_NORTH = 3;
 const int MOVE_SOUTH = 1;
 
-const double DRIFT_NORTH = .7;
-const double DRIFT_LEFT = .15;
-const double DRIFT_RIGHT = .15;
+const double DRIFT_HORIZONTAL = .3;
+const double DRIFT_LEFT = 0.15;
 
 const double EPISON = .05;
 const double GAMMA = .9;
@@ -26,13 +25,34 @@ Node::Node(NODE_STATUS _status) {
         value = _GOALPOS;
 }
 
-void QLearning(pair<int, int> curPos) {
+void QLearning(pair<int, int> state) {
 
     int x = 0;
+    DIR dir;
 
-    while (x < 100 &&
-           MAP[curPos.first][curPos.second].status != GOAL &&
-           MAP[curPos.first][curPos.second].status != TRAP) {
+    while (MAP[state.first][state.second].status != GOAL &&
+           MAP[state.first][state.second].status != TRAP &&
+           x < 100) {
+
+        dir = EGreedy(state);
+
+        // Equation 1
+        IncrementN(state, dir);
+
+        // Equation 2
+        pair<int, int> nextPos = GetNxtPos(state, dir);
+
+        float newQValue = 0.0f;
+
+        newQValue = GetQ(state, dir) +
+                    (((1 / GetN(state, dir)) *
+                      (GetR(state, dir) +
+                       GAMMA * GetMaxQ(nextPos) -
+                       GetQ(state, dir))));
+
+        SetQ(state, dir, newQValue);
+
+        state = Move(state, dir);
 
         x++;
     }
@@ -279,6 +299,36 @@ pair<int, int> GetNxtPos(std::pair<int, int> curState, DIR action) {
     return curState;
 }
 
+pair<int, int> Move(std::pair<int, int> curState, DIR action) {
+
+    double randValue = rand() / ((RAND_MAX) / 1);
+
+    // Drift Straight
+    if (randValue > DRIFT_HORIZONTAL) {
+        return GetNxtPos(curState, action);
+    } else if (randValue >= DRIFT_LEFT) {
+        if (action == NORTH) {
+            return GetNxtPos(curState, EAST);
+        } else if (action == EAST) {
+            return GetNxtPos(curState, SOUTH);
+        } else if (action == SOUTH) {
+            return GetNxtPos(curState, WEST);
+        } else {
+            return GetNxtPos(curState, NORTH);
+        }
+    } else {
+        if (action == NORTH) {
+            return GetNxtPos(curState, WEST);
+        } else if (action == EAST) {
+            return GetNxtPos(curState, NORTH);
+        } else if (action == SOUTH) {
+            return GetNxtPos(curState, EAST);
+        } else {
+            return GetNxtPos(curState, SOUTH);
+        }
+    }
+}
+
 vector<pair<int, int>> GetOpenPositions() {
 
     vector<pair<int, int>> openPos;
@@ -344,31 +394,31 @@ float GetQ(std::pair<int, int> curState, DIR action) {
     return MAP[curState.first][curState.second].Q[action];
 }
 
-float GetMaxQ(std::pair<int, int> nextPos) {
+float GetMaxQ(std::pair<int, int> nextState) {
 
-    float max = MAP[nextPos.first][nextPos.second].Q[0];
+    float max = MAP[nextState.first][nextState.second].Q[0];
 
     for (int x = 0; x < 4; x++) {
-        if (MAP[nextPos.first][nextPos.second].Q[x] > max) {
-            max = MAP[nextPos.first][nextPos.second].Q[x];
+        if (MAP[nextState.first][nextState.second].Q[x] > max) {
+            max = MAP[nextState.first][nextState.second].Q[x];
         }
     }
 
     return max;
 }
 
-DIR EGreedy(std::pair<int, int> curPos) {
+DIR EGreedy(std::pair<int, int> curState) {
 
     double randValue = rand() / ((RAND_MAX) / 1);
     DIR bestDir;
 
     if (randValue > EPISON) {
 
-        float max = MAP[curPos.first][curPos.second].Q[0];
+        float max = MAP[curState.first][curState.second].Q[0];
 
         for (int x = 0; x < 4; x++) {
-            if (MAP[curPos.first][curPos.second].Q[x] > max) {
-                max = MAP[curPos.first][curPos.second].Q[x];
+            if (MAP[curState.first][curState.second].Q[x] > max) {
+                max = MAP[curState.first][curState.second].Q[x];
                 if (x == 0)
                     bestDir = NORTH;
                 else if (x == 1)
@@ -404,7 +454,7 @@ void SetQ(std::pair<int, int> curState, DIR action, float newQValue) {
 }
 
 void IncrementN(std::pair<int, int> curState, DIR action) {
-    MAP[curState.first][curState.second].N[action]++;
+    MAP[curState.first][curState.second].N[action] += 1;
 }
 
 // The Map

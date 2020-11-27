@@ -13,7 +13,7 @@ vector<vector<int>> CORR{
 	,{___S,  ___WALL, 100, ___W, ___W}
 
 	,{___S,  ___WALL, ___WALL, ___N, ___E}
-	,{___S,  ___WALL, ___N, ___N, ___N}
+	,{___S,  ___WALL, ___E, ___N, ___N}
 	,{___E,  ___E, ___E, ___N, ___N}
 };
 
@@ -184,7 +184,13 @@ void PrintBestPolicy() {
     cout << "Best policy\n";
 
     vector<pair<string, pair<int,int>>> diff;
+    cout << '\t';
+    for(int i=0; i < MAP[0].size(); i++){
+	    cout << i << ":\t";
+    }
+    cout << endl;
     for (int i = 0; i < MAP.size(); ++i) {
+	    cout << i << ":\t";
         for (int j = 0; j < MAP[i].size(); ++j) {
             DIR bestdir = NORTH;
 

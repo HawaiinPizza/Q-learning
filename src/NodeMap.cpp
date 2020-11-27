@@ -107,29 +107,43 @@ void PrintQGrid(int side) {
                 case 0: //NORTH
                     if (MAP[i][j].status == CLOSE ||
                         MAP[i][j].status == GOAL) {
-                        cout << ' ' << ' ' << '\t';
+                        cout << '\t' << ' ' << '\t';
                     } else {
-                        cout << setprecision(2);
-                        cout << ' ' << MAP[i][j].Q[NORTH] << '\t';
+                        cout << setprecision(1);
+                        cout << fixed;
+                        cout << setw(12);
+                        cout << MAP[i][j].Q[NORTH];
+                        cout << "    ";
                     }
                     break;
-                case 1: // HORTZ
+                case 1: // HORIZ
                     if (MAP[i][j].status == CLOSE) {
-                        cout << "####" << '\t';
+                        cout << setw(12);
+                        cout << "####";
+                        cout << "    ";
                     } else if (MAP[i][j].status == GOAL) {
-                        cout << "+100" << '\t';
+                        cout << setw(12);
+                        cout << "+100";
+                        cout << "    ";
                     } else {
-                        cout << setprecision(2);
-                        cout << MAP[i][j].Q[WEST] << ' ' << MAP[i][j].Q[EAST] << '\t';
+                        cout << setprecision(1);
+                        cout << fixed;
+                        cout << setw(8);
+                        cout << MAP[i][j].Q[WEST];
+                        cout << setw(8);
+                        cout << MAP[i][j].Q[EAST];
                     }
                     break;
                 case 2: // SOUTH
                     if (MAP[i][j].status == CLOSE ||
                         MAP[i][j].status == GOAL) {
-                        cout << ' ' << ' ' << '\t';
+                        cout << '\t' << ' ' << '\t';
                     } else {
-                        cout << setprecision(2);
-                        cout << ' ' << MAP[i][j].Q[SOUTH] << '\t';
+                        cout << setprecision(1);
+                        cout << fixed;
+                        cout << setw(12);
+                        cout << MAP[i][j].Q[SOUTH];
+                        cout << "    ";
                     }
                     break;
                 }
@@ -152,26 +166,40 @@ void PrintNGrid(int side) {
                 case 0: //NORTH
                     if (MAP[i][j].status == CLOSE ||
                         MAP[i][j].status == GOAL) {
-                        cout << ' ' << ' ' << '\t';
+                        cout << '\t' << ' ' << '\t';
                     } else {
-                        cout << ' ' << MAP[i][j].N[NORTH] << '\t';
+                        cout << fixed;
+                        cout << setw(12);
+                        cout << MAP[i][j].N[NORTH];
+                        cout << "    ";
                     }
                     break;
-                case 1: // HORTZ
+                case 1: // HORIZ
                     if (MAP[i][j].status == CLOSE) {
-                        cout << "####" << '\t';
+                        cout << setw(12);
+                        cout << "####";
+                        cout << "    ";
                     } else if (MAP[i][j].status == GOAL) {
-                        cout << "+100" << '\t';
+                        cout << setw(12);
+                        cout << "+100";
+                        cout << "    ";
                     } else {
-                        cout << MAP[i][j].N[WEST] << ' ' << MAP[i][j].N[EAST] << '\t';
+                        cout << fixed;
+                        cout << setw(8);
+                        cout << MAP[i][j].N[WEST];
+                        cout << setw(8);
+                        cout << MAP[i][j].N[EAST];
                     }
                     break;
                 case 2: // SOUTH
                     if (MAP[i][j].status == CLOSE ||
                         MAP[i][j].status == GOAL) {
-                        cout << ' ' << ' ' << '\t';
+                        cout << '\t' << ' ' << '\t';
                     } else {
-                        cout << ' ' << MAP[i][j].N[SOUTH] << '\t';
+                        cout << fixed;
+                        cout << setw(12);
+                        cout << MAP[i][j].N[SOUTH];
+                        cout << "    ";
                     }
                     break;
                 }

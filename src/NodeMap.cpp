@@ -272,7 +272,7 @@ void PrintBestPolicy(time_t timeNow) {
     }
 }
 
-void SetMapUp() {
+void EnvironmentSimulation() {
 
     bool north, south, east, west;
 

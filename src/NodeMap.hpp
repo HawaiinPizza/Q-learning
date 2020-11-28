@@ -27,7 +27,7 @@ struct Node {
 typedef vector<vector<Node>> vmap;
 
 void QLearning(pair<int, int>);
-void SetMapUp();
+void EnvironmentSimulation();
 void PrintMap();
 void PrintBestPolicy(time_t);
 void PrintNGrid(int, time_t);

@@ -3,20 +3,6 @@
 #include <cstdlib>
 #include <iomanip>
 
-const int ___E = 0;
-const int ___N = 1;
-const int ___S = 2;
-const int ___W = 3;
-const int ___WALL = -1;
-
-vector<vector<int>> CORR{
-    {___E, ___E, ___E, ___S, ___S},
-    {___N, ___WALL, ___WALL, ___S, ___S},
-    {___S, ___WALL, 100, ___W, ___W},
-    {___S, ___WALL, ___WALL, ___N, ___W},
-    {___S, ___WALL, ___E, ___N, ___N},
-    {___E, ___E, ___E, ___N, ___N}};
-
 const string IO_EAST = ">>>>";
 const string IO_WEST = "<<<<";
 const string IO_NORTH = "^^^^";

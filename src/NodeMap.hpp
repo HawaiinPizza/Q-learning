@@ -29,9 +29,9 @@ typedef vector<vector<Node>> vmap;
 void QLearning(pair<int, int>);
 void SetMapUp();
 void PrintMap();
-void PrintBestPolicy();
-void PrintNGrid(int);
-void PrintQGrid(int);
+void PrintBestPolicy(time_t);
+void PrintNGrid(int, time_t);
+void PrintQGrid(int, time_t);
 void IncrementN(std::pair<int, int>, DIR);
 void SetQ(std::pair<int, int>, DIR, float);
 

@@ -1,6 +1,8 @@
 #include "NodeMap.hpp"
 #include <array>
+#include <chrono>
 #include <cstdlib>
+#include <ctime>
 #include <iomanip>
 
 const string IO_EAST = ">>>>";
@@ -72,16 +74,20 @@ void PrintMap() {
 
     int side;
 
+    // Fnding the current time to print for the screenshot
+    auto timeNow =
+        chrono::system_clock::to_time_t(chrono::system_clock::now());
+
     // Call all of the printing functions
     // and print all of the different required maps
-    PrintNGrid(side);
-    PrintQGrid(side);
-    PrintBestPolicy();
+    PrintNGrid(side, timeNow);
+    PrintQGrid(side, timeNow);
+    PrintBestPolicy(timeNow);
 }
 
-void PrintQGrid(int side) {
+void PrintQGrid(int side, time_t timeNow) {
 
-    cout << "Q(s,a):\n";
+    cout << "\n  Q(s,a): Muaz Alhaidar & Zakariya Ahmed - " << ctime(&timeNow) << "\n";
 
     // Printing all Q values of each position
     //      -2.1
@@ -140,9 +146,9 @@ void PrintQGrid(int side) {
     }
 }
 
-void PrintNGrid(int side) {
+void PrintNGrid(int side, time_t timeNow) {
 
-    cout << "N(s,a):\n";
+    cout << "\n  N(s,a): Muaz Alhaidar & Zakariya Ahmed - " << ctime(&timeNow) << "\n";
 
     // Printing all N values of each position
     //      25
@@ -197,9 +203,10 @@ void PrintNGrid(int side) {
     }
 }
 
-void PrintBestPolicy() {
+void PrintBestPolicy(time_t timeNow) {
 
-    cout << "Optimal Policy:\n";
+    cout << "\n  Optimal Policy: Muaz Alhaidar & Zakariya Ahmed - " << ctime(&timeNow) << "\n";
+    cout << "     ";
 
     // Column numbering at the top
     for (int i = 0; i < MAP[0].size(); i++) {
@@ -213,6 +220,7 @@ void PrintBestPolicy() {
     // based on the highest Q value in that position
     for (int i = 0; i < MAP.size(); ++i) {
         // Row numbering on the right side
+        cout << "      ";
         cout << i << ":";
         for (int j = 0; j < MAP[i].size(); ++j) {
             DIR bestdir = NORTH;
@@ -259,6 +267,7 @@ void PrintBestPolicy() {
                 }
             }
         }
+        cout << endl;
         cout << endl;
     }
 }

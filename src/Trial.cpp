@@ -5,6 +5,7 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
 
+
     EnvironmentSimulation();
 
     vector<pair<int, int>> openPos;

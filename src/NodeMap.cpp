@@ -27,17 +27,15 @@ const int MOVE_NORTH = 3;
 const int MOVE_SOUTH = 1;
 
 const double DRIFT_HORIZONTAL = .3;
-const double DRIFT_LEFT = 0.15;
+const double DRIFT_RIGHT = 0.15;
 
-const double EPISON = .05;
+const double EPSILON = .05;
 const double GAMMA = .9;
 
 int _GOALPOS = 100;
 
 Node::Node(NODE_STATUS _status) {
     status = _status;
-    if (_status == GOAL)
-        value = _GOALPOS;
 }
 
 void QLearning(pair<int, int> state) {
@@ -45,42 +43,40 @@ void QLearning(pair<int, int> state) {
     int x = 0;
     DIR dir;
 
+    // Run the trial for 100 turns
+    // stop if the goal or a trap is reached
     while (MAP[state.first][state.second].status != GOAL &&
            MAP[state.first][state.second].status != TRAP &&
            x < 100) {
 
+        // Find the next direction using E-Greedy
         dir = EGreedy(state);
 
         // Equation 1
         IncrementN(state, dir);
 
         // Equation 2
-        pair<int, int> nextPos = GetNxtPos(state, dir);
-
-        float qVal = GetQ(state, dir);
-        int nVal = GetN(state, dir);
-
+        // Find the next position in order to get the reward
+        // and Max Q value
         pair<pair<int, int>, DIR> nextMove = Move(state, dir);
 
+        float qVal = GetQ(state, dir);
         float maxQVal = GetMaxQ(nextMove.first);
-        int rVal = GetR(state, nextMove.second);
 
-        // cout << "QVal: " << qVal << endl;
-        // cout << "MaxQ: " << maxQVal << endl;
-        // cout << "NVal: " << nVal << endl;
-        // cout << "RVal: " << rVal << endl;
+        int rVal = GetR(state, nextMove.second);
+        int nVal = GetN(state, dir);
 
         float newQValue;
 
+        // This is Q learning equation
         newQValue = qVal + (1.0f / nVal) * (rVal + (GAMMA * maxQVal) - qVal);
-
-        // cout << "NewQ: " << newQValue << endl
-        //      << endl;
 
         SetQ(state, dir, newQValue);
 
+        // Moving to the next state
         state = nextMove.first;
 
+        // Increment the turn
         x++;
     }
 }
@@ -90,6 +86,8 @@ void PrintMap() {
 
     int side;
 
+    // Call all of the printing functions
+    // and print all of the different required maps
     PrintNGrid(side);
     PrintQGrid(side);
     PrintBestPolicy();
@@ -98,6 +96,11 @@ void PrintMap() {
 void PrintQGrid(int side) {
 
     cout << "Q(s,a):\n";
+
+    // Printing all Q values of each position
+    //      -2.1
+    // 23.5      22.6
+    //      38.7
 
     cout << setprecision(1);
     cout << fixed;
@@ -155,6 +158,10 @@ void PrintNGrid(int side) {
 
     cout << "N(s,a):\n";
 
+    // Printing all N values of each position
+    //      25
+    //  25      25
+    //      25
     for (int i = 0; i < MAP.size(); ++i) {
         for (int k = 0; k < 3; k++) {
             side = k;
@@ -208,14 +215,19 @@ void PrintBestPolicy() {
 
     cout << "Optimal Policy:\n";
 
-    vector<pair<string, pair<int, int>>> diff;
-    cout << '\t';
+    // Column numbering at the top
     for (int i = 0; i < MAP[0].size(); i++) {
-        cout << i << ":\t";
+        cout << setw(4);
+        cout << i << ":";
     }
+
     cout << endl;
+
+    // Loop through the maze and print out the best direction
+    // based on the highest Q value in that position
     for (int i = 0; i < MAP.size(); ++i) {
-        cout << i << ":\t";
+        // Row numbering on the right side
+        cout << i << ":";
         for (int j = 0; j < MAP[i].size(); ++j) {
             DIR bestdir = NORTH;
 
@@ -236,70 +248,48 @@ void PrintBestPolicy() {
                 bestdir = SOUTH;
             }
 
+            cout << setw(5);
+
+            // Printing out the approptiate symbols of:
+            // >>>>, <<<<, ^^^^, VVVV, ####, and +100
             if (MAP[i][j].status == CLOSE) {
-                cout << "####" << '\t';
+                cout << "####";
             } else if (MAP[i][j].status == GOAL) {
-                cout << "+100" << '\t';
+                cout << "+100";
             } else {
-                /* pair<int,int> difference={i,j}; */
                 switch (bestdir) {
                 case NORTH:
-                    if (___N != CORR[i][j]) {
-                        pair<string, pair<int, int>> difference = {IO_NORTH, {i, j}};
-                        diff.push_back(difference);
-                    }
-                    cout << IO_NORTH << '\t';
+                    cout << IO_NORTH;
                     break;
                 case SOUTH:
-                    if (___S != CORR[i][j]) {
-                        pair<string, pair<int, int>> difference = {IO_SOUTH, {i, j}};
-                        diff.push_back(difference);
-                    }
-                    cout << IO_SOUTH << '\t';
+                    cout << IO_SOUTH;
                     break;
                 case EAST:
-                    if (___E != CORR[i][j]) {
-                        pair<string, pair<int, int>> difference = {IO_EAST, {i, j}};
-                        diff.push_back(difference);
-                    }
-                    cout << IO_EAST << '\t';
+                    cout << IO_EAST;
                     break;
                 case WEST:
-                    if (___W != CORR[i][j]) {
-                        pair<string, pair<int, int>> difference = {IO_WEST, {i, j}};
-                        diff.push_back(difference);
-                    }
-                    cout << IO_WEST << '\t';
+                    cout << IO_WEST;
                     break;
                 }
             }
         }
         cout << endl;
     }
-    for (int i = 0; i < diff.size(); ++i) {
-        string correct;
-        switch (CORR[diff[i].second.first][diff[i].second.second]) {
-        case ___E:
-            correct = IO_EAST;
-            break;
-        case ___W:
-            correct = IO_WEST;
-            break;
-        case ___N:
-            correct = IO_NORTH;
-            break;
-        case ___S:
-            correct = IO_SOUTH;
-            break;
-        }
-        cout << "DIFF: positon " << diff[i].second.first << '\t' << diff[i].second.second << '\t' << "values: " << diff[i].first << '\t' << correct << endl;
-    }
 }
 
 void SetMapUp() {
+
     bool north, south, east, west;
+
     int tmpi = 0;
     int tmpj = 0;
+
+    /* 
+        Loop through the maze and find whether the surounding
+        areas of each position is blocked or not.
+        This will help later when finding whether the next position
+        is blocked.
+    */
     for (int i = 0; i < MAP.size(); ++i) {
         for (int j = 0; j < MAP[i].size(); ++j) {
             { // Checking north pos
@@ -338,11 +328,6 @@ void SetMapUp() {
                 else
                     west = false;
             }
-            /* MAP[i][j].BLOCKED = {NORTH, SOUTH, EAST, WEST}; */
-            /* MAP[i][j].BLOCKED[NORTH]=true; */
-            /* MAP[i][j].BLOCKED[SOUTH]=true; */
-            /* MAP[i][j].BLOCKED[EAST]=true; */
-            /* MAP[i][j].BLOCKED[WEST]=true; */
 
             MAP[i][j].BLOCKED[NORTH] = north;
             MAP[i][j].BLOCKED[SOUTH] = south;
@@ -355,14 +340,22 @@ void SetMapUp() {
 // Position Functions
 pair<int, int> RandomPos(vector<pair<int, int>> openPos) {
 
+    // Taking in a list of the open positions in the maze
+
+    // Findin a random value from the range of
+    // 0 to size of the open positions array
     int randValue = rand() / ((RAND_MAX) / openPos.size());
 
+    // Choosing a random position
     return openPos[randValue];
 }
 
 pair<int, int> GetNxtPos(std::pair<int, int> curState, DIR action) {
 
+    // Taking in a state and action
     switch (action) {
+    // Checking whether the next position is open or blocked
+    // If it is not blocked then return the next position
     case NORTH:
         if (!MAP[curState.first][curState.second].BLOCKED[NORTH])
             return pair<int, int>{curState.first - 1, curState.second};
@@ -384,17 +377,21 @@ pair<int, int> GetNxtPos(std::pair<int, int> curState, DIR action) {
         break;
     }
 
+    // Returning the current position if the next position is blocked
+    // AKA Bouncing off
     return curState;
 }
 
 pair<pair<int, int>, DIR> Move(std::pair<int, int> curState, DIR action) {
 
+    // Roll for drifting
     float randValue = rand() / (float)(RAND_MAX);
 
-    // Drift Straight
+    // Drift Straight if the random roll is greater than 30%
     if (randValue >= DRIFT_HORIZONTAL) {
         return pair<pair<int, int>, DIR>{GetNxtPos(curState, action), action};
-    } else if (randValue > DRIFT_LEFT) {
+        // If the roll is between 30% - 15% we drift LEFT
+    } else if (randValue > DRIFT_RIGHT) {
         if (action == NORTH) {
             return pair<pair<int, int>, DIR>{GetNxtPos(curState, WEST), WEST};
         } else if (action == EAST) {
@@ -404,6 +401,7 @@ pair<pair<int, int>, DIR> Move(std::pair<int, int> curState, DIR action) {
         } else {
             return pair<pair<int, int>, DIR>{GetNxtPos(curState, SOUTH), SOUTH};
         }
+        // If the roll is between 15% - 0% we drift RIGHT
     } else {
         if (action == NORTH) {
             return pair<pair<int, int>, DIR>{GetNxtPos(curState, EAST), EAST};
@@ -421,6 +419,8 @@ vector<pair<int, int>> GetOpenPositions() {
 
     vector<pair<int, int>> openPos;
 
+    // Loop through the entire maze and record the
+    // x and y of the open positions
     for (int x = 0; x < MAP.size(); x++) {
         for (int y = 0; y < MAP[x].size(); y++) {
             if (MAP[x][y].status == OPEN) {
@@ -434,11 +434,16 @@ vector<pair<int, int>> GetOpenPositions() {
 
 // Get Value for equations functions
 int GetN(std::pair<int, int> curState, DIR action) {
+    // Return the N value based on the chosen direction
+    // and the current position
     return MAP[curState.first][curState.second].N[action];
 }
 
 int GetR(std::pair<int, int> curState, DIR action) {
 
+    // Based on the current action return the cost for that direction
+    // If the next position based on the action is the goal and
+    // is not blocked, then return GOALVALUE - COST TO GET TO GOAL
     switch (action) {
     case NORTH:
         if (!MAP[curState.first][curState.second].BLOCKED[NORTH] &&
@@ -479,13 +484,19 @@ int GetR(std::pair<int, int> curState, DIR action) {
 }
 
 float GetQ(std::pair<int, int> curState, DIR action) {
+    // Return the appropriate Q value based on the action
+    // and the current position
     return MAP[curState.first][curState.second].Q[action];
 }
 
 float GetMaxQ(std::pair<int, int> nextState) {
 
+    // This is a standard algorithm to find the largest
+    // value in an array
     float max = MAP[nextState.first][nextState.second].Q[0];
 
+    // Loop though all of the values and keep a record of the
+    // largest one
     for (int x = 0; x < 4; x++) {
         if (MAP[nextState.first][nextState.second].Q[x] > max) {
             max = MAP[nextState.first][nextState.second].Q[x];
@@ -497,11 +508,14 @@ float GetMaxQ(std::pair<int, int> nextState) {
 
 DIR EGreedy(std::pair<int, int> curState) {
 
+    // Roll for exploration
     float randValue = rand() / (float)(RAND_MAX);
 
     DIR bestDir = (DIR)((int)(rand() / ((RAND_MAX) / 4)));
 
-    if (randValue > EPISON) {
+    // There is a 5% chance to pick a random direction
+    // If the roll is greater than 5% we go with the best direction
+    if (randValue > EPSILON) {
 
         float max = MAP[curState.first][curState.second].Q[0];
 
@@ -514,7 +528,7 @@ DIR EGreedy(std::pair<int, int> curState) {
         }
 
     } else {
-
+        // Picking a random direction
         bestDir = (DIR)(rand() / ((RAND_MAX) / 4));
     }
 
@@ -523,14 +537,17 @@ DIR EGreedy(std::pair<int, int> curState) {
 
 // Set Value for equations functions
 void SetQ(std::pair<int, int> curState, DIR action, float newQValue) {
+    // Given a State, Action, and NewQ
+    // Assign the Q value to the appropriate direction and position
     MAP[curState.first][curState.second].Q[action] = newQValue;
 }
 
 void IncrementN(std::pair<int, int> curState, DIR action) {
+    // Increment N to be used in Equation 2 of P3.pdf
     MAP[curState.first][curState.second].N[action] += 1;
 }
 
-// The Map
+// The Map used in the entire program
 vector<vector<Node>> MAP{
     {OPEN, OPEN, OPEN, OPEN, OPEN},
     {OPEN, CLOSE, CLOSE, OPEN, OPEN},
